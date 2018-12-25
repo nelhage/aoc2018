@@ -21,7 +21,7 @@ for a, b in transitions:
       i += 1
   lookup[i] = int(b == '#')
 
-NGEN = 20
+NGEN = 200
 
 PAD = NGEN*4
 state = np.array([0]*PAD +
@@ -33,6 +33,7 @@ state = np.array([0]*PAD +
 
 indices = np.zeros(state.shape, dtype=np.uint8)
 
+prev=0
 for i in range(NGEN):
   indices[:2] = 0
   indices[-2:] = 0
@@ -43,6 +44,7 @@ for i in range(NGEN):
   indices[2:-2] += state[4:]
   state[:] = lookup[indices]
   # print("i={:3} state={}".format(i, ''.join('#' if b else '.' for b in state)))
-
-print("len={}", len(state))
-print("sum={}", np.sum(np.arange(-PAD, len(state)-PAD)[state != 0]))
+  sum = np.sum(np.arange(-PAD, len(state)-PAD)[state != 0])
+  print("gen={:3} sum={} d={}".format(
+    i+1, sum, sum-prev))
+  prev = sum
