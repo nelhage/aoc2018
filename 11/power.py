@@ -23,7 +23,15 @@ for x in range(300):
     grid[x,y] = pw
 
 
-conv = scipy.signal.convolve2d(grid, np.ones((3,3)))
+best = (0,0,0)
+max  = -1e6
 
-x,y = np.unravel_index(np.argmax(conv, axis=None), conv.shape)
-print((x - 1, y - 1))
+for sz in range(1, 300):
+  conv = scipy.signal.convolve2d(grid, np.ones((sz, sz)), mode='valid')
+  x, y = np.unravel_index(np.argmax(conv, axis=None), conv.shape)
+  if conv[x,y] > max:
+    max = conv[x,y]
+    best = (sz, x + 1, y + 1)
+  print("size={} x={} y={} max={}".format(sz, x + 1, y + 1, conv[x,y]))
+
+print(best)
